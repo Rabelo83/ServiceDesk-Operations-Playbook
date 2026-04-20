@@ -304,7 +304,10 @@
             } else {
                 tasks = storedTasks.map(t => {
                     let matchingInitial = initialTasks.find(init => init.id === t.id);
-                    if(matchingInitial && !t.resourceUrl) t.resourceUrl = matchingInitial.resourceUrl;
+                    if(matchingInitial) {
+                        if(!t.resourceUrl) t.resourceUrl = matchingInitial.resourceUrl;
+                        if(!t.due) t.due = matchingInitial.due;
+                    }
                     return t;
                 });
             }
