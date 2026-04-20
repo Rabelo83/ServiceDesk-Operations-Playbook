@@ -327,21 +327,21 @@
             }
 
             const initialTasks = [
-                { id: "t1", phase: "1", title: "Deploy MS365 E5 Sandbox", desc: "Sign up for Free MS Developer Program to safely practice Intune.", status: "todo", due: addDays(7), evidence: "", resourceUrl: "https://developer.microsoft.com/en-us/microsoft-365/dev-program", targetReq: "Endpoint Environments" },
-                { id: "t2", phase: "1", title: "Manager Chat & Promotion Log", desc: "Seed progression idea. Start a log: Date, Issue, Fix, Business Impact.", status: "todo", due: addDays(10), evidence: "", resourceUrl: "", targetReq: "Continual Service Improvement" },
+                { id: "t1", phase: "1", title: "Deploy MS365 E5 Sandbox", desc: "Sign up for Free MS Developer Program to cleanly separate your lab from City infra.", status: "todo", due: addDays(7), evidence: "", resourceUrl: "https://developer.microsoft.com/en-us/microsoft-365/dev-program", targetReq: "Endpoint Environments" },
+                { id: "t2", phase: "1", title: "CSS-to-IT Proof Log", desc: "Start documenting how your CSS projects (SMS, Odoo, LLM) act as Tier 3 IT work.", status: "todo", due: addDays(10), evidence: "", resourceUrl: "", targetReq: "Transferable Skills" },
                 { id: "t3", phase: "1", title: "MD-102: Explore Endpoints", desc: "Start the official free MS Learn path for Endpoint Admin (MD-102).", status: "todo", due: addDays(14), evidence: "", resourceUrl: "https://learn.microsoft.com/en-us/training/paths/explore-endpoint-management/", targetReq: "MDM Platforms (Intune, ABM)" },
                 { id: "t4", phase: "1", title: "MD-102: Device Enrollment", desc: "Enroll a test device on your MS365 lab and push compliance policies.", status: "todo", due: addDays(21), evidence: "", resourceUrl: "https://learn.microsoft.com/en-us/training/paths/execute-device-enrollment/", targetReq: "Configuration Management" },
-                { id: "t5", phase: "2", title: "Own a Visible Improvement", desc: "Take charge of a KB cleanup, triage cheat sheet, or small automation.", status: "todo", due: addDays(35), evidence: "", resourceUrl: "", targetReq: "ITIL Process & Automations" },
+                { id: "t5", phase: "2", title: "Automate a CSS Workflow", desc: "Use a script or tool to fix a bottleneck in your current Customer Service role.", status: "todo", due: addDays(35), evidence: "", resourceUrl: "", targetReq: "ITIL Process & Automations" },
                 { id: "t6", phase: "2", title: "MD-102: App Management", desc: "Learn to package Win32 apps and deploy policies.", status: "todo", due: addDays(42), evidence: "", resourceUrl: "https://learn.microsoft.com/en-us/training/paths/examine-application-management/", targetReq: "Software Deployments & Pkg" },
-                { id: "t7", phase: "2", title: "Cross-Team Shadowing", desc: "Jump on harder tickets involving Networking or Infrastructure teams.", status: "todo", due: addDays(49), evidence: "", resourceUrl: "", targetReq: "Cross-Department Collaboration" },
-                { id: "t8", phase: "2", title: "Mentor Newer Staff", desc: "Informally train Tier 1s & Interns on process. Document this as proof.", status: "todo", due: addDays(55), evidence: "", resourceUrl: "", targetReq: "Technical Mentoring" },
+                { id: "t7", phase: "2", title: "Service Desk Networking", desc: "Reach out to City IT for an informal chat about their stack, not a formal shadow.", status: "todo", due: addDays(49), evidence: "", resourceUrl: "", targetReq: "Cross-Department Alignment" },
+                { id: "t8", phase: "2", title: "Cross-Train CSS Staff", desc: "Train other CSS reps on your custom tools. Document this to prove mentoring.", status: "todo", due: addDays(55), evidence: "", resourceUrl: "", targetReq: "Technical Mentoring" },
                 { id: "t9", phase: "3", title: "Network+ Real-World Prep", desc: "Review CompTIA Net+ objectives (VPNs, Subnets) using free materials.", status: "todo", due: addDays(65), evidence: "", resourceUrl: "https://www.comptia.org/faq/network/what-is-comptia-network-certification", targetReq: "Endpoint Connectivity" },
-                { id: "t10", phase: "3", title: "Draft Enterprise SOPs", desc: "Write root cause forms & Intune SOPs demonstrating Level 3 skill.", status: "todo", due: addDays(75), evidence: "", resourceUrl: "", targetReq: "SOP Governance & Documentation" },
-                { id: "t11", phase: "3", title: "Package The Evidence", desc: "Compile resume, brag sheet, logs, and MS365 lab proof into a portfolio.", status: "todo", due: addDays(85), evidence: "", resourceUrl: "", targetReq: "Service Level Attainment" },
-                { id: "t12", phase: "3", title: "Pitch Promotion & Sponsorship", desc: "Present portfolio. Ask employer to sponsor the MD-102/Net+ exams.", status: "todo", due: addDays(90), evidence: "", resourceUrl: "", targetReq: "Level III Qualification" }
+                { id: "t10", phase: "3", title: "Write Playbook SOPs", desc: "Write root cause forms & Intune SOPs for your GitHub to simulate Level 3 skill.", status: "todo", due: addDays(75), evidence: "", resourceUrl: "", targetReq: "SOP Governance & Documentation" },
+                { id: "t11", phase: "3", title: "Package The Evidence", desc: "Compile resume, brag sheet, and MS365 lab proof into a transfer portfolio.", status: "todo", due: addDays(85), evidence: "", resourceUrl: "", targetReq: "Proof of Capability" },
+                { id: "t12", phase: "3", title: "Apply for IT Transfer", desc: "Apply for IT roles using your GitHub playbook as your main portfolio.", status: "todo", due: addDays(90), evidence: "", resourceUrl: "", targetReq: "Level III Qualification" }
             ];
 
-            let storedTasks = JSON.parse(localStorage.getItem("analystTrackerV2"));
+            let storedTasks = JSON.parse(localStorage.getItem("analystTrackerV3"));
 
             // To prevent resetting the whole localstorage but safely merge resource URLs if the user has a saved state:
             let tasks = [];
@@ -433,7 +433,7 @@
                 document.getElementById('progress-bar').style.width = progressPercent + '%';
                 document.getElementById('progress-text').innerText = progressPercent + '%';
 
-                localStorage.setItem("analystTrackerV2", JSON.stringify(tasks));
+                localStorage.setItem("analystTrackerV3", JSON.stringify(tasks));
             }
 
             window.drag = function (ev) { ev.dataTransfer.setData("text", ev.target.id); }
