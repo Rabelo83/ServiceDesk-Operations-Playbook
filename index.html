@@ -289,10 +289,95 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(59, 130, 246, 0.4);
         }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--container-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            position: relative;
+            animation: modalFadeIn 0.2s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        .modal-close:hover { color: var(--text-main); }
+        
+        .modal-title {
+            color: #60a5fa;
+            margin-bottom: 1.5rem;
+            margin-top: 0;
+            font-size: 1.3rem;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 0.5rem;
+        }
+
+        .modal-steps {
+            color: #cbd5e1;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            padding-left: 1.5rem;
+        }
+
+        .modal-steps li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .steps-btn {
+            font-size: 0.75rem;
+            color: #f472b6;
+            text-decoration: none;
+            background: rgba(244, 114, 182, 0.1);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            border: 1px solid rgba(244, 114, 182, 0.3);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .steps-btn:hover { background: rgba(244, 114, 182, 0.2); }
     </style>
 </head>
 
 <body>
+    
+    <div class="modal-overlay" id="taskModal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal(event, true)">&times;</button>
+            <h2 class="modal-title" id="modalTitle">Task Title</h2>
+            <ol class="modal-steps" id="modalSteps">
+                <!-- Steps injected dynamically -->
+            </ol>
+        </div>
+    </div>
 
     <header>
         <h1>Analyst III - 90 Day Upskill Tracker</h1>
@@ -348,21 +433,21 @@
             }
 
             const initialTasks = [
-                { id: "t1", phase: "1", title: "Deploy MS365 E5 Sandbox", desc: "Sign up for Free MS Developer Program to cleanly separate your lab from City infra.", status: "todo", due: addDays(7), evidence: "", resourceUrl: "https://developer.microsoft.com/en-us/microsoft-365/dev-program", targetReq: "Endpoint Environments" },
-                { id: "t2", phase: "1", title: "CSS-to-IT Proof Log", desc: "Start documenting how your CSS projects (SMS, Odoo, LLM) act as Tier 3 IT work.", status: "todo", due: addDays(10), evidence: "", resourceUrl: "", targetReq: "Transferable Skills" },
-                { id: "t3", phase: "1", title: "MD-102: Explore Endpoints", desc: "Start the official free MS Learn path for Endpoint Admin (MD-102).", status: "todo", due: addDays(14), evidence: "", resourceUrl: "https://learn.microsoft.com/en-us/training/paths/explore-endpoint-management/", targetReq: "MDM Platforms (Intune, ABM)" },
-                { id: "t4", phase: "1", title: "MD-102: Device Enrollment", desc: "Enroll a test device on your MS365 lab and push compliance policies.", status: "todo", due: addDays(21), evidence: "", resourceUrl: "https://learn.microsoft.com/en-us/training/paths/execute-device-enrollment/", targetReq: "Configuration Management" },
-                { id: "t5", phase: "2", title: "Automate a CSS Workflow", desc: "Use a script or tool to fix a bottleneck in your current Customer Service role.", status: "todo", due: addDays(35), evidence: "", resourceUrl: "", targetReq: "ITIL Process & Automations" },
-                { id: "t6", phase: "2", title: "MD-102: App Management", desc: "Learn to package Win32 apps and deploy policies.", status: "todo", due: addDays(42), evidence: "", resourceUrl: "https://learn.microsoft.com/en-us/training/paths/examine-application-management/", targetReq: "Software Deployments & Pkg" },
-                { id: "t7", phase: "2", title: "Service Desk Networking", desc: "Reach out to City IT for an informal chat about their stack, not a formal shadow.", status: "todo", due: addDays(49), evidence: "", resourceUrl: "", targetReq: "Cross-Department Alignment" },
-                { id: "t8", phase: "2", title: "Cross-Train CSS Staff", desc: "Train other CSS reps on your custom tools. Document this to prove mentoring.", status: "todo", due: addDays(55), evidence: "", resourceUrl: "", targetReq: "Technical Mentoring" },
-                { id: "t9", phase: "3", title: "Network+ Real-World Prep", desc: "Review CompTIA Net+ objectives (VPNs, Subnets) using free materials.", status: "todo", due: addDays(65), evidence: "", resourceUrl: "https://www.comptia.org/faq/network/what-is-comptia-network-certification", targetReq: "Endpoint Connectivity" },
-                { id: "t10", phase: "3", title: "Write Playbook SOPs", desc: "Write root cause forms & Intune SOPs for your GitHub to simulate Level 3 skill.", status: "todo", due: addDays(75), evidence: "", resourceUrl: "", targetReq: "SOP Governance & Documentation" },
-                { id: "t11", phase: "3", title: "Package The Evidence", desc: "Compile resume, brag sheet, and MS365 lab proof into a transfer portfolio.", status: "todo", due: addDays(85), evidence: "", resourceUrl: "", targetReq: "Proof of Capability" },
-                { id: "t12", phase: "3", title: "Apply for IT Transfer", desc: "Apply for IT roles using your GitHub playbook as your main portfolio.", status: "todo", due: addDays(90), evidence: "", resourceUrl: "", targetReq: "Level III Qualification" }
+                { id: "t1", phase: "1", title: "Deploy MS365 E5 Sandbox", desc: "Sign up for Free MS Developer Program to cleanly separate your lab from City infra.", status: "todo", due: addDays(7), evidence: "", resourceUrl: "https://developer.microsoft.com/en-us/microsoft-365/dev-program", targetReq: "Endpoint Environments", steps: ["Go to the Developer portal using the provided link.", "Sign in with a personal Microsoft account (not your City account to avoid conflicts).", "Select 'Set up an E5 subscription'.", "Follow the prompts to create your new *.onmicrosoft.com tenant domain.", "Log into endpoint.microsoft.com with your new credentials to verify Intune access."] },
+                { id: "t2", phase: "1", title: "CSS-to-IT Proof Log", desc: "Start documenting how your CSS projects (SMS, Odoo, LLM) act as Tier 3 IT work.", status: "todo", due: addDays(10), evidence: "", resourceUrl: "", targetReq: "Transferable Skills", steps: ["Open a new Word doc or OneNote notebook.", "Set 'Odoo' as a heading. Write down exactly what you fixed, the root cause, and how long it took.", "Frame your SMS project using IT terms (e.g. 'Architected an automated workflow to reduce Tier 1 calls by 20%').", "Update this log every week with one new technical fix or project you handle as a CSS."] },
+                { id: "t3", phase: "1", title: "MD-102: Explore Endpoints", desc: "Start the official free MS Learn path for Endpoint Admin (MD-102).", status: "todo", due: addDays(14), evidence: "", resourceUrl: "https://learn.microsoft.com/en-us/training/paths/explore-endpoint-management/", targetReq: "MDM Platforms (Intune, ABM)", steps: ["Open the Microsoft Learn Resource Link.", "Read through the core differences between Configuration Manager and Intune.", "Learn the concept of 'Co-Management'.", "Take the short knowledge check at the end of the module. You do not need to pay for the exam yet."] },
+                { id: "t4", phase: "1", title: "MD-102: Device Enrollment", desc: "Enroll a test device on your MS365 lab and push compliance policies.", status: "todo", due: addDays(21), evidence: "", resourceUrl: "https://learn.microsoft.com/en-us/training/paths/execute-device-enrollment/", targetReq: "Configuration Management", steps: ["Spin up a free Windows 10/11 Virtual Machine (Hyper-V or VirtualBox) OR use an old spare laptop.", "Open Intune (endpoint.microsoft.com) -> Devices -> Enrollment.", "Enroll your test machine into your E5 Developer Tenant.", "Create a Compliance Policy (e.g. 'Require Bitlocker') and assign it to the device.", "Wait 30 mins and verify the device shows as 'Compliant' in the portal."] },
+                { id: "t5", phase: "2", title: "Automate a CSS Workflow", desc: "Use a script or tool to fix a bottleneck in your current Customer Service role.", status: "todo", due: addDays(35), evidence: "", resourceUrl: "", targetReq: "ITIL Process & Automations", steps: ["Identify the most annoying, repetitive task your CSS team does daily.", "Look into using Power Automate, Python, or standard macros to automate it.", "Build the automation on your own time.", "Present the automation to your CSS manager to get it approved for team use.", "Add this massive 'Win' to your CSS-to-IT Proof Log."] },
+                { id: "t6", phase: "2", title: "MD-102: App Management", desc: "Learn to package Win32 apps and deploy policies.", status: "todo", due: addDays(42), evidence: "", resourceUrl: "https://learn.microsoft.com/en-us/training/paths/examine-application-management/", targetReq: "Software Deployments & Pkg", steps: ["Download the Microsoft Win32 Content Prep Tool.", "Download a clean installer of Google Chrome (.msi or .exe).", "Wrap the Chrome installer into a .intunewin file using the Prep Tool.", "Upload the .intunewin file to Intune under Apps -> Windows.", "Assign it as 'Required' to your test machine and watch it violently deploy in your lab!"] },
+                { id: "t7", phase: "2", title: "Service Desk Networking", desc: "Reach out to City IT for an informal chat about their stack, not a formal shadow.", status: "todo", due: addDays(49), evidence: "", resourceUrl: "", targetReq: "Cross-Department Alignment", steps: ["Identify a friendly Level II Analyst or IT Manager in the City's directory.", "Send them a polite Teams message.", "Script: 'Hi X, I work in CSS. I've been studying MDM/Intune heavily on my own time because I admire what your team does. Do you have 15 mins for coffee/chat next week to talk about your experience?'", "Do NOT ask for a job yet. Ask them what their biggest pain points are to grain crucial intel."] },
+                { id: "t8", phase: "2", title: "Cross-Train CSS Staff", desc: "Train other CSS reps on your custom tools. Document this to prove mentoring.", status: "todo", due: addDays(55), evidence: "", resourceUrl: "", targetReq: "Technical Mentoring", steps: ["Pick one of your colleagues in the Call Center.", "Sit with them for 30 minutes and properly train them on how to troubleshoot the Odoo environment.", "Write down a 1-page PDF guide (SOP) on what you trained them on.", "Upload that PDF to your Github Playbook as proof of your mentorship and training capability."] },
+                { id: "t9", phase: "3", title: "Network+ Real-World Prep", desc: "Review CompTIA Net+ objectives (VPNs, Subnets) using free materials.", status: "todo", due: addDays(65), evidence: "", resourceUrl: "https://www.comptia.org/faq/network/what-is-comptia-network-certification", targetReq: "Endpoint Connectivity", steps: ["Open Professor Messer's Network+ playlist on Youtube.", "Focus ONLY on watching modules related to: Subnetting, VPN setup, 802.1X, and DNS troubleshooting.", "Write 1 or 2 paragraphs in your log explaining how DNS connects to Active Directory based on what you learn.", "This ensures you are interview-ready without paying for the exam yet."] },
+                { id: "t10", phase: "3", title: "Write Playbook SOPs", desc: "Write root cause forms & Intune SOPs for your GitHub to simulate Level 3 skill.", status: "todo", due: addDays(75), evidence: "", resourceUrl: "", targetReq: "SOP Governance & Documentation", steps: ["For every Intune policy you created (Task 4 and 6), write a 1-page guide explaining *why* you configured it that way.", "Format them cleanly in Markdown or save as PDFs.", "Upload these directly into your GitHub 'ServiceDesk-Operations-Playbook' repository so anyone can read them publicly."] },
+                { id: "t11", phase: "3", title: "Package The Evidence", desc: "Compile resume, brag sheet, and MS365 lab proof into a transfer portfolio.", status: "todo", due: addDays(85), evidence: "", resourceUrl: "", targetReq: "Proof of Capability", steps: ["Update your resume bullets to reflect the new automated IT workloads from your CSS projects.", "Take screenshots of your E5 Developer Intune dashboard policies.", "Compile all screenshots, SOPs, and your CSS-Proof log into one master PDF or Github Wiki.", "Review all your materials against the Analyst III job description one last time."] },
+                { id: "t12", phase: "3", title: "Apply for IT Transfer", desc: "Apply for IT roles using your GitHub playbook as your main portfolio.", status: "todo", due: addDays(90), evidence: "", resourceUrl: "", targetReq: "Level III Qualification", steps: ["Find the internal City portal for the Analyst II or III postings.", "Apply formally and attach your master portfolio PDF.", "Send an email to the IT Manager (your networking connection from Task 7): 'Hi! I officially put my application in today. I wanted to share my Github Playbook demonstrating my Intune environments just in case it helps!'", "Nail the interview."] }
             ];
 
-            let storedTasks = JSON.parse(localStorage.getItem("analystTrackerV3"));
+            let storedTasks = JSON.parse(localStorage.getItem("analystTrackerV4"));
 
             // To prevent resetting the whole localstorage but safely merge resource URLs if the user has a saved state:
             let tasks = [];
@@ -375,6 +460,7 @@
                         if (!t.resourceUrl) t.resourceUrl = matchingInitial.resourceUrl;
                         if (!t.due) t.due = matchingInitial.due;
                         if (!t.targetReq) t.targetReq = matchingInitial.targetReq;
+                        if (!t.steps) t.steps = matchingInitial.steps;
                     }
                     return t;
                 });
@@ -435,6 +521,7 @@
                         <div class="action-row">
                             <span class="tag">${phaseName}</span>
                             <div style="display:flex; gap: 8px;">
+                                <button class="steps-btn" onclick="openModal('${task.id}', event)">🛠️ View Steps</button>
                                 ${resourceHtml}
                                 ${evidenceHtml}
                             </div>
@@ -454,7 +541,7 @@
                 document.getElementById('progress-bar').style.width = progressPercent + '%';
                 document.getElementById('progress-text').innerText = progressPercent + '%';
 
-                localStorage.setItem("analystTrackerV3", JSON.stringify(tasks));
+                localStorage.setItem("analystTrackerV4", JSON.stringify(tasks));
             }
 
             window.drag = function (ev) { ev.dataTransfer.setData("text", ev.target.id); }
@@ -498,6 +585,23 @@
             document.querySelectorAll('.task-list').forEach(list => {
                 list.addEventListener('dragleave', function (e) { this.classList.remove('drag-over'); });
             });
+            
+            window.openModal = function(taskId, ev) {
+                if (ev) ev.stopPropagation();
+                const task = tasks.find(t => t.id === taskId);
+                if(task && task.steps) {
+                    document.getElementById('modalTitle').innerText = task.title;
+                    const stepsHtml = task.steps.map(step => `<li>${step}</li>`).join('');
+                    document.getElementById('modalSteps').innerHTML = stepsHtml;
+                    document.getElementById('taskModal').style.display = 'flex';
+                }
+            };
+            
+            window.closeModal = function(ev, force = false) {
+                if (force || ev.target.id === 'taskModal') {
+                    document.getElementById('taskModal').style.display = 'none';
+                }
+            };
 
             renderTasks();
         };
