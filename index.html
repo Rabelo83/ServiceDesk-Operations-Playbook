@@ -433,7 +433,7 @@
             }
 
             const initialTasks = [
-                { id: "t1", phase: "1", title: "Deploy MS365 E5 Sandbox", desc: "Sign up for Free MS Developer Program to cleanly separate your lab from City infra.", status: "todo", due: addDays(7), evidence: "", resourceUrl: "https://developer.microsoft.com/en-us/microsoft-365/dev-program", targetReq: "Endpoint Environments", steps: ["Go to the Developer portal using the provided link.", "Sign in with a personal Microsoft account (not your City account to avoid conflicts).", "Select 'Set up an E5 subscription'.", "Follow the prompts to create your new *.onmicrosoft.com tenant domain.", "Log into endpoint.microsoft.com with your new credentials to verify Intune access."] },
+                { id: "t1", phase: "1", title: "Deploy Intune Lab Tenant", desc: "Sign up for an Intune Free Trial to bypass Microsoft's Dev restrictions and cleanly separate your lab.", status: "todo", due: addDays(7), evidence: "", resourceUrl: "https://learn.microsoft.com/en-us/mem/intune/fundamentals/free-trial-sign-up", targetReq: "Endpoint Environments", steps: ["Because Microsoft recently restricted the Dev portal, we will use a standard Intune trial instead.", "Click the Study Material link and click the link to 'sign up for a free trial'.", "Set up a new account (use a throwaway email to avoid conflicts).", "Create your new *.onmicrosoft.com tenant domain.", "Log into endpoint.microsoft.com with your new credentials to enter your Intune lab!"] },
                 { id: "t2", phase: "1", title: "CSS-to-IT Proof Log", desc: "Start documenting how your CSS projects (SMS, Odoo, LLM) act as Tier 3 IT work.", status: "todo", due: addDays(10), evidence: "", resourceUrl: "", targetReq: "Transferable Skills", steps: ["Open a new Word doc or OneNote notebook.", "Set 'Odoo' as a heading. Write down exactly what you fixed, the root cause, and how long it took.", "Frame your SMS project using IT terms (e.g. 'Architected an automated workflow to reduce Tier 1 calls by 20%').", "Update this log every week with one new technical fix or project you handle as a CSS."] },
                 { id: "t3", phase: "1", title: "MD-102: Explore Endpoints", desc: "Start the official free MS Learn path for Endpoint Admin (MD-102).", status: "todo", due: addDays(14), evidence: "", resourceUrl: "https://learn.microsoft.com/en-us/training/paths/explore-endpoint-management/", targetReq: "MDM Platforms (Intune, ABM)", steps: ["Open the Microsoft Learn Resource Link.", "Read through the core differences between Configuration Manager and Intune.", "Learn the concept of 'Co-Management'.", "Take the short knowledge check at the end of the module. You do not need to pay for the exam yet."] },
                 { id: "t4", phase: "1", title: "MD-102: Device Enrollment", desc: "Enroll a test device on your MS365 lab and push compliance policies.", status: "todo", due: addDays(21), evidence: "", resourceUrl: "https://learn.microsoft.com/en-us/training/paths/execute-device-enrollment/", targetReq: "Configuration Management", steps: ["Spin up a free Windows 10/11 Virtual Machine (Hyper-V or VirtualBox) OR use an old spare laptop.", "Open Intune (endpoint.microsoft.com) -> Devices -> Enrollment.", "Enroll your test machine into your E5 Developer Tenant.", "Create a Compliance Policy (e.g. 'Require Bitlocker') and assign it to the device.", "Wait 30 mins and verify the device shows as 'Compliant' in the portal."] },
@@ -447,7 +447,7 @@
                 { id: "t12", phase: "3", title: "Apply for IT Transfer", desc: "Apply for IT roles using your GitHub playbook as your main portfolio.", status: "todo", due: addDays(90), evidence: "", resourceUrl: "", targetReq: "Level III Qualification", steps: ["Find the internal City portal for the Analyst II or III postings.", "Apply formally and attach your master portfolio PDF.", "Send an email to the IT Manager (your networking connection from Task 7): 'Hi! I officially put my application in today. I wanted to share my Github Playbook demonstrating my Intune environments just in case it helps!'", "Nail the interview."] }
             ];
 
-            let storedTasks = JSON.parse(localStorage.getItem("analystTrackerV4"));
+            let storedTasks = JSON.parse(localStorage.getItem("analystTrackerV5"));
 
             // To prevent resetting the whole localstorage but safely merge resource URLs if the user has a saved state:
             let tasks = [];
@@ -541,7 +541,7 @@
                 document.getElementById('progress-bar').style.width = progressPercent + '%';
                 document.getElementById('progress-text').innerText = progressPercent + '%';
 
-                localStorage.setItem("analystTrackerV4", JSON.stringify(tasks));
+                localStorage.setItem("analystTrackerV5", JSON.stringify(tasks));
             }
 
             window.drag = function (ev) { ev.dataTransfer.setData("text", ev.target.id); }
