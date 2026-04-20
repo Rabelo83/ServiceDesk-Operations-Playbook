@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -54,7 +55,7 @@
             background: var(--container-bg);
             padding: 1.5rem;
             border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         }
 
         .progress-bar-bg {
@@ -107,9 +108,17 @@
             font-size: 1.1rem;
         }
 
-        .todo-header { color: var(--text-muted); }
-        .progress-header { color: #60a5fa; }
-        .done-header { color: #34d399; }
+        .todo-header {
+            color: var(--text-muted);
+        }
+
+        .progress-header {
+            color: #60a5fa;
+        }
+
+        .done-header {
+            color: #34d399;
+        }
 
         .task-list {
             flex-grow: 1;
@@ -127,12 +136,26 @@
             position: relative;
         }
 
-        .task-card:active { cursor: grabbing; }
-        .task-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .task-card:active {
+            cursor: grabbing;
+        }
 
-        .task-card[data-phase="1"] { border-left-color: #f472b6; }
-        .task-card[data-phase="2"] { border-left-color: #fbbf24; }
-        .task-card[data-phase="3"] { border-left-color: #34d399; }
+        .task-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .task-card[data-phase="1"] {
+            border-left-color: #f472b6;
+        }
+
+        .task-card[data-phase="2"] {
+            border-left-color: #fbbf24;
+        }
+
+        .task-card[data-phase="3"] {
+            border-left-color: #34d399;
+        }
 
         .task-header {
             display: flex;
@@ -151,7 +174,7 @@
         .due-date {
             font-size: 0.75rem;
             color: var(--text-muted);
-            background: rgba(0,0,0,0.2);
+            background: rgba(0, 0, 0, 0.2);
             padding: 2px 6px;
             border-radius: 4px;
             white-space: nowrap;
@@ -187,7 +210,7 @@
             font-size: 0.7rem;
             padding: 0.2rem 0.5rem;
             border-radius: 12px;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             color: #e2e8f0;
         }
 
@@ -204,7 +227,9 @@
             transition: all 0.2s;
         }
 
-        .resource-link:hover { background: rgba(96, 165, 250, 0.2); }
+        .resource-link:hover {
+            background: rgba(96, 165, 250, 0.2);
+        }
 
         .evidence-btn {
             font-size: 0.75rem;
@@ -220,14 +245,23 @@
             transition: all 0.2s;
         }
 
-        .evidence-btn:hover { background: rgba(16, 185, 129, 0.2); }
+        .evidence-btn:hover {
+            background: rgba(16, 185, 129, 0.2);
+        }
 
         @media (max-width: 800px) {
-            .board { grid-template-columns: 1fr; }
+            .board {
+                grid-template-columns: 1fr;
+            }
         }
-        .drag-over { background: rgba(255,255,255,0.05); border-radius: 8px; }
+
+        .drag-over {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
     </style>
 </head>
+
 <body>
 
     <header>
@@ -272,7 +306,7 @@
     </div>
 
     <script>
-        window.onload = function() {
+        window.onload = function () {
             const today = new Date();
             function addDays(days) {
                 let d = new Date(today);
@@ -281,32 +315,32 @@
             }
 
             const initialTasks = [
-                { id: "t1", phase: "1", title: "Study ITIL Fundamentals", desc: "Read Atlassian guides on Incident, Problem, Change Management.", status: "todo", due: addDays(7), evidence: "", resourceUrl: "https://www.atlassian.com/itsm" },
-                { id: "t2", phase: "1", title: "Manager Career Conversation", desc: "Seed the idea of Level III progression and ask for shadow ops.", status: "todo", due: addDays(10), evidence: "", resourceUrl: "" },
-                { id: "t3", phase: "1", title: "Deploy MS365 E5 Lab", desc: "Sign up for MS Developer Program & init Intune environment.", status: "todo", due: addDays(14), evidence: "", resourceUrl: "https://developer.microsoft.com/en-us/microsoft-365/dev-program" },
-                { id: "t4", phase: "1", title: "Intune Basics (MD-102)", desc: "Enroll a test device and push a basic compliance policy.", status: "todo", due: addDays(21), evidence: "", resourceUrl: "https://learn.microsoft.com/en-us/training/paths/manage-endpoints-with-microsoft-intune/" },
-                { id: "t5", phase: "2", title: "Win32 App Packaging", desc: "Wrap an app into .intunewin and deploy it via Intune.", status: "todo", due: addDays(35), evidence: "", resourceUrl: "https://learn.microsoft.com/en-us/mem/intune/apps/apps-win32-prepare" },
-                { id: "t6", phase: "2", title: "Write Offboarding Script", desc: "Write a PowerShell script for automated diagnostics.", status: "todo", due: addDays(42), evidence: "", resourceUrl: "" },
-                { id: "t7", phase: "2", title: "Shadow Level II/III Colleague", desc: "Spend 1 hr shadowing AD resets & device provisioning.", status: "todo", due: addDays(49), evidence: "", resourceUrl: "" },
-                { id: "t8", phase: "2", title: "Proof of Value Chat", desc: "Ask manager to shadow a real enterprise batch deployment.", status: "todo", due: addDays(55), evidence: "", resourceUrl: "" },
-                { id: "t9", phase: "3", title: "Network Setup/VPN", desc: "Study Prof Messer Net+ modules on VPNs and 802.1X.", status: "todo", due: addDays(65), evidence: "", resourceUrl: "https://www.professormesser.com/network-plus/n10-008/n10-008-video/n10-008-training-course/" },
-                { id: "t10", phase: "3", title: "Draft Enterprise SOPs", desc: "Document Intune deployment logic mirroring enterprise standards.", status: "todo", due: addDays(75), evidence: "", resourceUrl: "" },
-                { id: "t11", phase: "3", title: "Build Evidence Folder", desc: "Gather SOPs, scripts, and Odoo architecture for portfolio.", status: "todo", due: addDays(85), evidence: "", resourceUrl: "" },
-                { id: "t12", phase: "3", title: "The Promotion Pitch", desc: "Present portfolio to management and apply for Level III openings.", status: "todo", due: addDays(90), evidence: "", resourceUrl: "" }
+                { id: "t1", phase: "1", title: "Deploy MS365 E5 Sandbox", desc: "Sign up for Free MS Developer Program to safely practice Intune.", status: "todo", due: addDays(7), evidence: "", resourceUrl: "https://developer.microsoft.com/en-us/microsoft-365/dev-program" },
+                { id: "t2", phase: "1", title: "Manager Chat & Promotion Log", desc: "Seed progression idea. Start a log: Date, Issue, Fix, Business Impact.", status: "todo", due: addDays(10), evidence: "", resourceUrl: "" },
+                { id: "t3", phase: "1", title: "MD-102: Explore Endpoints", desc: "Start the official free MS Learn path for Endpoint Admin (MD-102).", status: "todo", due: addDays(14), evidence: "", resourceUrl: "https://learn.microsoft.com/en-us/training/paths/explore-endpoint-management/" },
+                { id: "t4", phase: "1", title: "MD-102: Device Enrollment", desc: "Enroll a test device on your MS365 lab and push compliance policies.", status: "todo", due: addDays(21), evidence: "", resourceUrl: "https://learn.microsoft.com/en-us/training/paths/execute-device-enrollment/" },
+                { id: "t5", phase: "2", title: "Own a Visible Improvement", desc: "Take charge of a KB cleanup, triage cheat sheet, or small automation.", status: "todo", due: addDays(35), evidence: "", resourceUrl: "" },
+                { id: "t6", phase: "2", title: "MD-102: App Management", desc: "Learn to package Win32 apps and deploy policies.", status: "todo", due: addDays(42), evidence: "", resourceUrl: "https://learn.microsoft.com/en-us/training/paths/examine-application-management/" },
+                { id: "t7", phase: "2", title: "Cross-Team Shadowing", desc: "Jump on harder tickets involving Networking or Infrastructure teams.", status: "todo", due: addDays(49), evidence: "", resourceUrl: "" },
+                { id: "t8", phase: "2", title: "Mentor Newer Staff", desc: "Informally train Tier 1s & Interns on process. Document this as proof.", status: "todo", due: addDays(55), evidence: "", resourceUrl: "" },
+                { id: "t9", phase: "3", title: "Network+ Real-World Prep", desc: "Review CompTIA Net+ objectives (VPNs, Subnets) using free materials.", status: "todo", due: addDays(65), evidence: "", resourceUrl: "https://www.comptia.org/faq/network/what-is-comptia-network-certification" },
+                { id: "t10", phase: "3", title: "Draft Enterprise SOPs", desc: "Write root cause forms & Intune SOPs demonstrating Level 3 skill.", status: "todo", due: addDays(75), evidence: "", resourceUrl: "" },
+                { id: "t11", phase: "3", title: "Package The Evidence", desc: "Compile resume, brag sheet, logs, and MS365 lab proof into a portfolio.", status: "todo", due: addDays(85), evidence: "", resourceUrl: "" },
+                { id: "t12", phase: "3", title: "Pitch Promotion & Sponsorship", desc: "Present portfolio. Ask employer to sponsor the MD-102/Net+ exams.", status: "todo", due: addDays(90), evidence: "", resourceUrl: "" }
             ];
 
-            let storedTasks = JSON.parse(localStorage.getItem("analystTracker"));
-            
+            let storedTasks = JSON.parse(localStorage.getItem("analystTrackerV2"));
+
             // To prevent resetting the whole localstorage but safely merge resource URLs if the user has a saved state:
             let tasks = [];
-            if(!storedTasks || storedTasks.length === 0) {
+            if (!storedTasks || storedTasks.length === 0) {
                 tasks = initialTasks;
             } else {
                 tasks = storedTasks.map(t => {
                     let matchingInitial = initialTasks.find(init => init.id === t.id);
-                    if(matchingInitial) {
-                        if(!t.resourceUrl) t.resourceUrl = matchingInitial.resourceUrl;
-                        if(!t.due) t.due = matchingInitial.due;
+                    if (matchingInitial) {
+                        if (!t.resourceUrl) t.resourceUrl = matchingInitial.resourceUrl;
+                        if (!t.due) t.due = matchingInitial.due;
                     }
                     return t;
                 });
@@ -329,16 +363,16 @@
                     card.ondragstart = drag;
 
                     let phaseName = task.phase == 1 ? "Phase 1: Foundation" : (task.phase == 2 ? "Phase 2: Execution" : "Phase 3: Portfolio");
-                    
+
                     let taskDate = new Date(task.due);
                     let diffDays = Math.ceil((taskDate - todayDate) / (1000 * 60 * 60 * 24));
                     let dueClass = "";
                     let dueText = task.due;
-                    
+
                     if (task.status !== 'done') {
                         if (diffDays < 0) { dueClass = "overdue"; dueText = "Overdue!"; }
                         else if (diffDays <= 7) { dueClass = "urgent"; dueText = "Due in " + diffDays + " days"; }
-                        else { dueText = "Due: " + new Intl.DateTimeFormat('en-US', {month:'short', day:'numeric'}).format(taskDate); }
+                        else { dueText = "Due: " + new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(taskDate); }
                     } else {
                         dueText = "Completed";
                     }
@@ -385,26 +419,26 @@
                 document.getElementById('progress-bar').style.width = progressPercent + '%';
                 document.getElementById('progress-text').innerText = progressPercent + '%';
 
-                localStorage.setItem("analystTracker", JSON.stringify(tasks));
+                localStorage.setItem("analystTrackerV2", JSON.stringify(tasks));
             }
 
-            window.drag = function(ev) { ev.dataTransfer.setData("text", ev.target.id); }
+            window.drag = function (ev) { ev.dataTransfer.setData("text", ev.target.id); }
 
-            window.allowDrop = function(ev) {
+            window.allowDrop = function (ev) {
                 ev.preventDefault();
                 ev.currentTarget.classList.add('drag-over');
             }
 
-            window.drop = function(ev) {
+            window.drop = function (ev) {
                 ev.preventDefault();
                 const listId = ev.currentTarget.id;
                 document.querySelectorAll('.task-list').forEach(l => l.classList.remove('drag-over'));
 
-                if(listId === "todo" || listId === "progress" || listId === "done") {
+                if (listId === "todo" || listId === "progress" || listId === "done") {
                     const data = ev.dataTransfer.getData("text");
                     const taskIndex = tasks.findIndex(t => t.id === data);
-                    
-                    if(taskIndex > -1) {
+
+                    if (taskIndex > -1) {
                         if (listId === "done" && tasks[taskIndex].status !== 'done' && !tasks[taskIndex].evidence) {
                             let url = prompt("Completed! Attach a link to your certificate, screenshot, or SOP (Optional):");
                             if (url) tasks[taskIndex].evidence = url.trim();
@@ -414,10 +448,10 @@
                     }
                 }
             }
-            
-            window.addEvidence = function(id) {
+
+            window.addEvidence = function (id) {
                 const taskIndex = tasks.findIndex(t => t.id === id);
-                if(taskIndex > -1) {
+                if (taskIndex > -1) {
                     let url = prompt("Attach your certificate, screenshot, or Github file link:");
                     if (url && url.trim() !== "") {
                         tasks[taskIndex].evidence = url.trim();
@@ -427,11 +461,12 @@
             }
 
             document.querySelectorAll('.task-list').forEach(list => {
-                list.addEventListener('dragleave', function(e) { this.classList.remove('drag-over'); });
+                list.addEventListener('dragleave', function (e) { this.classList.remove('drag-over'); });
             });
 
             renderTasks();
         };
     </script>
 </body>
+
 </html>
