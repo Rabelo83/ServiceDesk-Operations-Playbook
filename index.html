@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analyst III - 90 Day Tracker</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --container-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --column-todo: #334155;
+            --column-progress: #1e3a8a;
+            --column-done: #064e3b;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        header {
+            max-width: 1200px;
+            margin: 0 auto 2rem auto;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #60a5fa, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .progress-container {
+            max-width: 800px;
+            margin: 0 auto 3rem auto;
+            background: var(--container-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .progress-bar-bg {
+            background: #334155;
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .progress-bar-fill {
+            background: linear-gradient(90deg, #3b82f6, #10b981);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease-out;
+            border-radius: 6px;
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .column {
+            background: var(--container-bg);
+            border-radius: 12px;
+            padding: 1rem;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .column-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #334155;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .todo-header { color: var(--text-muted); }
+        .progress-header { color: #60a5fa; }
+        .done-header { color: #34d399; }
+
+        .task-list {
+            flex-grow: 1;
+            min-height: 100px;
+        }
+
+        .task-card {
+            background: var(--column-todo);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            cursor: grab;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-left: 4px solid var(--text-muted);
+            position: relative;
+        }
+
+        .task-card:active { cursor: grabbing; }
+        .task-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+
+        .task-card[data-phase="1"] { border-left-color: #f472b6; }
+        .task-card[data-phase="2"] { border-left-color: #fbbf24; }
+        .task-card[data-phase="3"] { border-left-color: #34d399; }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        .task-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            flex-grow: 1;
+            padding-right: 10px;
+        }
+
+        .due-date {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            background: rgba(0,0,0,0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        .due-date.urgent {
+            color: var(--warning);
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .due-date.overdue {
+            color: var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .task-desc {
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            line-height: 1.4;
+            margin-bottom: 0.75rem;
+        }
+
+        .action-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            display: inline-block;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.1);
+            color: #e2e8f0;
+        }
+
+        .resource-link {
+            font-size: 0.75rem;
+            color: #60a5fa;
+            text-decoration: none;
+            background: rgba(96, 165, 250, 0.1);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            border: 1px solid rgba(96, 165, 250, 0.3);
+            transition: all 0.2s;
+        }
+
+        .resource-link:hover { background: rgba(96, 165, 250, 0.2); }
+
+        .evidence-btn {
+            font-size: 0.75rem;
+            color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .evidence-btn:hover { background: rgba(16, 185, 129, 0.2); }
+
+        @media (max-width: 800px) {
+            .board { grid-template-columns: 1fr; }
+        }
+        .drag-over { background: rgba(255,255,255,0.05); border-radius: 8px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Analyst III - 90 Day Upskill Tracker</h1>
+        <p class="subtitle">Enterprise IT Service Desk Progression Lab</p>
+    </header>
+
+    <div class="progress-container">
+        <div class="stat-header">
+            <span>Overall Readiness to Level III</span>
+            <span id="progress-text">0%</span>
+        </div>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progress-bar"></div>
+        </div>
+    </div>
+
+    <div class="board">
+        <div class="column">
+            <div class="column-header todo-header">
+                <span>📋 To Do</span>
+                <span class="count" id="count-todo">0</span>
+            </div>
+            <div class="task-list" id="todo" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        </div>
+
+        <div class="column">
+            <div class="column-header progress-header">
+                <span>⚡ In Progress</span>
+                <span class="count" id="count-progress">0</span>
+            </div>
+            <div class="task-list" id="progress" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        </div>
+
+        <div class="column">
+            <div class="column-header done-header">
+                <span>✅ Completed</span>
+                <span class="count" id="count-done">0</span>
+            </div>
+            <div class="task-list" id="done" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            const today = new Date();
+            function addDays(days) {
+                let d = new Date(today);
+                d.setDate(d.getDate() + days);
+                return d.toISOString().split('T')[0];
+            }
+
+            const initialTasks = [
+                { id: "t1", phase: "1", title: "Study ITIL Fundamentals", desc: "Read Atlassian guides on Incident, Problem, Change Management.", status: "todo", due: addDays(7), evidence: "", resourceUrl: "https://www.atlassian.com/itsm" },
+                { id: "t2", phase: "1", title: "Manager Career Conversation", desc: "Seed the idea of Level III progression and ask for shadow ops.", status: "todo", due: addDays(10), evidence: "", resourceUrl: "" },
+                { id: "t3", phase: "1", title: "Deploy MS365 E5 Lab", desc: "Sign up for MS Developer Program & init Intune environment.", status: "todo", due: addDays(14), evidence: "", resourceUrl: "https://developer.microsoft.com/en-us/microsoft-365/dev-program" },
+                { id: "t4", phase: "1", title: "Intune Basics (MD-102)", desc: "Enroll a test device and push a basic compliance policy.", status: "todo", due: addDays(21), evidence: "", resourceUrl: "https://learn.microsoft.com/en-us/training/paths/manage-endpoints-with-microsoft-intune/" },
+                { id: "t5", phase: "2", title: "Win32 App Packaging", desc: "Wrap an app into .intunewin and deploy it via Intune.", status: "todo", due: addDays(35), evidence: "", resourceUrl: "https://learn.microsoft.com/en-us/mem/intune/apps/apps-win32-prepare" },
+                { id: "t6", phase: "2", title: "Write Offboarding Script", desc: "Write a PowerShell script for automated diagnostics.", status: "todo", due: addDays(42), evidence: "", resourceUrl: "" },
+                { id: "t7", phase: "2", title: "Shadow Level II/III Colleague", desc: "Spend 1 hr shadowing AD resets & device provisioning.", status: "todo", due: addDays(49), evidence: "", resourceUrl: "" },
+                { id: "t8", phase: "2", title: "Proof of Value Chat", desc: "Ask manager to shadow a real enterprise batch deployment.", status: "todo", due: addDays(55), evidence: "", resourceUrl: "" },
+                { id: "t9", phase: "3", title: "Network Setup/VPN", desc: "Study Prof Messer Net+ modules on VPNs and 802.1X.", status: "todo", due: addDays(65), evidence: "", resourceUrl: "https://www.professormesser.com/network-plus/n10-008/n10-008-video/n10-008-training-course/" },
+                { id: "t10", phase: "3", title: "Draft Enterprise SOPs", desc: "Document Intune deployment logic mirroring enterprise standards.", status: "todo", due: addDays(75), evidence: "", resourceUrl: "" },
+                { id: "t11", phase: "3", title: "Build Evidence Folder", desc: "Gather SOPs, scripts, and Odoo architecture for portfolio.", status: "todo", due: addDays(85), evidence: "", resourceUrl: "" },
+                { id: "t12", phase: "3", title: "The Promotion Pitch", desc: "Present portfolio to management and apply for Level III openings.", status: "todo", due: addDays(90), evidence: "", resourceUrl: "" }
+            ];
+
+            let storedTasks = JSON.parse(localStorage.getItem("analystTracker"));
+            
+            // To prevent resetting the whole localstorage but safely merge resource URLs if the user has a saved state:
+            let tasks = [];
+            if(!storedTasks || storedTasks.length === 0) {
+                tasks = initialTasks;
+            } else {
+                tasks = storedTasks.map(t => {
+                    let matchingInitial = initialTasks.find(init => init.id === t.id);
+                    if(matchingInitial && !t.resourceUrl) t.resourceUrl = matchingInitial.resourceUrl;
+                    return t;
+                });
+            }
+
+            function renderTasks() {
+                document.getElementById('todo').innerHTML = '';
+                document.getElementById('progress').innerHTML = '';
+                document.getElementById('done').innerHTML = '';
+
+                let doneCount = 0;
+                let todayDate = new Date();
+
+                tasks.forEach(task => {
+                    const card = document.createElement('div');
+                    card.className = 'task-card';
+                    card.draggable = true;
+                    card.id = task.id;
+                    card.setAttribute('data-phase', task.phase);
+                    card.ondragstart = drag;
+
+                    let phaseName = task.phase == 1 ? "Phase 1: Foundation" : (task.phase == 2 ? "Phase 2: Execution" : "Phase 3: Portfolio");
+                    
+                    let taskDate = new Date(task.due);
+                    let diffDays = Math.ceil((taskDate - todayDate) / (1000 * 60 * 60 * 24));
+                    let dueClass = "";
+                    let dueText = task.due;
+                    
+                    if (task.status !== 'done') {
+                        if (diffDays < 0) { dueClass = "overdue"; dueText = "Overdue!"; }
+                        else if (diffDays <= 7) { dueClass = "urgent"; dueText = "Due in " + diffDays + " days"; }
+                        else { dueText = "Due: " + new Intl.DateTimeFormat('en-US', {month:'short', day:'numeric'}).format(taskDate); }
+                    } else {
+                        dueText = "Completed";
+                    }
+
+                    // Render Evidence button
+                    let evidenceHtml = "";
+                    if (task.evidence && task.evidence.trim() !== "") {
+                        evidenceHtml = `<a href="${task.evidence}" target="_blank" class="evidence-btn" onclick="event.stopPropagation()">🏆 Proof Link</a>`;
+                    } else if (task.status === 'done') {
+                        evidenceHtml = `<button class="evidence-btn" onclick="addEvidence('${task.id}')">+ Add Proof Link</button>`;
+                    }
+
+                    // Render Resource button
+                    let resourceHtml = "";
+                    if (task.resourceUrl && task.resourceUrl.trim() !== "") {
+                        resourceHtml = `<a href="${task.resourceUrl}" target="_blank" class="resource-link" onclick="event.stopPropagation()">📖 Study Material</a>`;
+                    }
+
+                    card.innerHTML = `
+                        <div class="task-header">
+                            <div class="task-title">${task.title}</div>
+                            <div class="due-date ${dueClass}">${dueText}</div>
+                        </div>
+                        <div class="task-desc">${task.desc}</div>
+                        <div class="action-row">
+                            <span class="tag">${phaseName}</span>
+                            <div style="display:flex; gap: 8px;">
+                                ${resourceHtml}
+                                ${evidenceHtml}
+                            </div>
+                        </div>
+                    `;
+
+                    document.getElementById(task.status).appendChild(card);
+
+                    if (task.status === 'done') doneCount++;
+                });
+
+                document.getElementById('count-todo').innerText = document.getElementById('todo').children.length;
+                document.getElementById('count-progress').innerText = document.getElementById('progress').children.length;
+                document.getElementById('count-done').innerText = doneCount;
+
+                const progressPercent = tasks.length > 0 ? Math.round((doneCount / tasks.length) * 100) : 0;
+                document.getElementById('progress-bar').style.width = progressPercent + '%';
+                document.getElementById('progress-text').innerText = progressPercent + '%';
+
+                localStorage.setItem("analystTracker", JSON.stringify(tasks));
+            }
+
+            window.drag = function(ev) { ev.dataTransfer.setData("text", ev.target.id); }
+
+            window.allowDrop = function(ev) {
+                ev.preventDefault();
+                ev.currentTarget.classList.add('drag-over');
+            }
+
+            window.drop = function(ev) {
+                ev.preventDefault();
+                const listId = ev.currentTarget.id;
+                document.querySelectorAll('.task-list').forEach(l => l.classList.remove('drag-over'));
+
+                if(listId === "todo" || listId === "progress" || listId === "done") {
+                    const data = ev.dataTransfer.getData("text");
+                    const taskIndex = tasks.findIndex(t => t.id === data);
+                    
+                    if(taskIndex > -1) {
+                        if (listId === "done" && tasks[taskIndex].status !== 'done' && !tasks[taskIndex].evidence) {
+                            let url = prompt("Completed! Attach a link to your certificate, screenshot, or SOP (Optional):");
+                            if (url) tasks[taskIndex].evidence = url.trim();
+                        }
+                        tasks[taskIndex].status = listId;
+                        renderTasks();
+                    }
+                }
+            }
+            
+            window.addEvidence = function(id) {
+                const taskIndex = tasks.findIndex(t => t.id === id);
+                if(taskIndex > -1) {
+                    let url = prompt("Attach your certificate, screenshot, or Github file link:");
+                    if (url && url.trim() !== "") {
+                        tasks[taskIndex].evidence = url.trim();
+                        renderTasks();
+                    }
+                }
+            }
+
+            document.querySelectorAll('.task-list').forEach(list => {
+                list.addEventListener('dragleave', function(e) { this.classList.remove('drag-over'); });
+            });
+
+            renderTasks();
+        };
+    </script>
+</body>
+</html>
